@@ -1,4 +1,4 @@
-package com.jet.player;
+package com.jet.infrastucture.controller;
 
 import com.jet.player.entity.Player;
 import com.jet.player.service.PlayerService;

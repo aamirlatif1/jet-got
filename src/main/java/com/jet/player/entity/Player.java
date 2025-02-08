@@ -1,5 +1,6 @@
 package com.jet.player.entity;
 
+import com.jet.player.valueobject.Status;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

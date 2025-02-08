@@ -1,7 +1,7 @@
 package com.jet.player.service;
 
 import com.jet.player.entity.Player;
-import com.jet.player.entity.Status;
+import com.jet.player.valueobject.Status;
 import com.jet.player.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

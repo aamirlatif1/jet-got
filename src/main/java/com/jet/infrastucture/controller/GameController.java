@@ -1,12 +1,11 @@
 package com.jet.infrastucture.controller;
 
+import com.jet.connon.dto.GameMoveRequest;
+import com.jet.connon.dto.GameStartRequest;
 import com.jet.game.entity.Game;
 import com.jet.game.service.GameService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/games")
@@ -15,19 +14,17 @@ public class GameController {
 
     private final GameService gameService;
 
-    @GetMapping("/player/{playerId}/number/{startNumber}")
+    @PostMapping("/start")
     public Game startGame(
-            @PathVariable("playerId") String playerId,
-            @PathVariable("startNumber") int startNumber) {
-        return gameService.startGame(startNumber, playerId);
+            @RequestBody GameStartRequest request) {
+        return gameService.startGame(request);
     }
 
-    @GetMapping("/game/{gameId}/player/{playerId}")
+    @PostMapping("/turn")
     public Game makeMove(
-            @PathVariable("gameId") String gameId,
-            @PathVariable("playerId") String playerId
+            @RequestBody GameMoveRequest request
     ) {
-        return gameService.makeMove(gameId, playerId);
+        return gameService.makeMove(request);
     }
 
 }

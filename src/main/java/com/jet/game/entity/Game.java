@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,15 +19,18 @@ import java.util.List;
 public class Game {
     @Id
     private String id;
-    private String currentPlayer;
+    private String playerTurn;
     private int currentNumber;
     private boolean finished;
-    private final List<Move> moveHistory = new ArrayList<>();
+    private List<String> players;
+    private List<Move> moveHistory;
 
-    public Game(String id, String player, int startNumber) {
-        this.id = id;
-        this.currentPlayer = player;
+    public Game(String startingPlayer, String againstPlayer, int startNumber) {
+        this.id = UUID.randomUUID().toString();
+        this.playerTurn = againstPlayer;
         this.currentNumber = startNumber;
+        this.moveHistory = new ArrayList<>();
+        this.players = List.of(startingPlayer, againstPlayer);
         this.finished = false;
     }
 
@@ -35,12 +39,18 @@ public class Game {
             throw new DomainException("Game is already finished");
         }
 
+        if (!playerTurn.equals(playerId)) {
+            throw new DomainException("turn is of different player");
+        }
+
         int addedValue = calculateBestMove();
         int newNumber = (currentNumber + addedValue) / 3;
 
         moveHistory.add(new Move(currentNumber, addedValue, newNumber, playerId));
         this.currentNumber = newNumber;
-        this.currentPlayer = playerId;
+        int index = players.indexOf(playerId);
+
+        this.playerTurn = players.get((index + 1) % 2);
 
         if (newNumber == 1) {
             finished = true;

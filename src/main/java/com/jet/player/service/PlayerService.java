@@ -1,5 +1,6 @@
 package com.jet.player.service;
 
+import com.jet.connon.dto.PlayerRequest;
 import com.jet.player.entity.Player;
 import com.jet.player.valueobject.Status;
 import com.jet.player.repository.PlayerRepository;
@@ -14,13 +15,16 @@ public class PlayerService {
 
     private final PlayerRepository repository;
 
-    public void savePlayer(Player player) {
+    public Player savePlayer(PlayerRequest request) {
+        Player player = new Player();
+        player.setId(request.getUsername());
+        player.setFullName(request.getFullName());
         player.setStatus(Status.ONLINE);
-        repository.save(player);
+        return repository.save(player);
     }
 
     public void disconnectPlayer(Player player) {
-        var storedPlayer = repository.findById(player.getUsername()).orElse(null);
+        var storedPlayer = repository.findById(player.getId()).orElse(null);
         if (storedPlayer != null) {
             storedPlayer.setStatus(Status.OFFLINE);
             repository.save(storedPlayer);

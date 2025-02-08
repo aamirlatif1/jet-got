@@ -1,5 +1,6 @@
 package com.jet.infrastucture.controller;
 
+import com.jet.connon.dto.PlayerRequest;
 import com.jet.player.entity.Player;
 import com.jet.player.service.PlayerService;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +18,8 @@ public class PlayerController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Player createPlayer(@RequestBody Player player) {
-        playerService.savePlayer(player);
-        return player;
+    public Player createPlayer(@RequestBody PlayerRequest request) {
+        return playerService.savePlayer(request);
     }
 
     @GetMapping("")

@@ -1,6 +1,6 @@
 package com.jet.infrastucture.controller;
 
-import com.jet.connon.dto.PlayerRequest;
+import com.jet.common.dto.PlayerRequest;
 import com.jet.player.entity.Player;
 import com.jet.player.service.PlayerService;
 import lombok.RequiredArgsConstructor;

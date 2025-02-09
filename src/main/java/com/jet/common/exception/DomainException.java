@@ -1,4 +1,4 @@
-package com.jet.connon.exception;
+package com.jet.common.exception;
 
 public class DomainException extends RuntimeException {
 

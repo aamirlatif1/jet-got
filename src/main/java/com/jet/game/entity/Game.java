@@ -1,6 +1,6 @@
 package com.jet.game.entity;
 
-import com.jet.connon.exception.DomainException;
+import com.jet.common.exception.DomainException;
 import com.jet.game.valueobject.Move;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +22,7 @@ public class Game {
     private String playerTurn;
     private int currentNumber;
     private boolean finished;
+    private String winner;
     private List<String> players;
     private List<Move> moveHistory;
 
@@ -54,6 +55,7 @@ public class Game {
 
         if (newNumber == 1) {
             finished = true;
+            winner = playerId;
         }
     }
 

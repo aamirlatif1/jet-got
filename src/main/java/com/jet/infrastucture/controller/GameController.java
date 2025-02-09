@@ -1,7 +1,7 @@
 package com.jet.infrastucture.controller;
 
-import com.jet.connon.dto.GameMoveRequest;
-import com.jet.connon.dto.GameStartRequest;
+import com.jet.common.dto.GameMoveRequest;
+import com.jet.common.dto.GameStartRequest;
 import com.jet.game.entity.Game;
 import com.jet.game.service.GameService;
 import lombok.RequiredArgsConstructor;

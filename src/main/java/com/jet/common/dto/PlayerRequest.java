@@ -1,4 +1,4 @@
-package com.jet.connon.dto;
+package com.jet.common.dto;
 
 import lombok.Getter;
 import lombok.Setter;

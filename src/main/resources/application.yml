@@ -11,5 +11,17 @@ spring:
       database: game_of_three
       authentication-database: admin
 
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: game-of-three-group
+      properties:
+        spring.json.trusted.packages: "com.jet.game.event"
+
 server:
   port: 8088

@@ -4,10 +4,12 @@ import com.jet.common.exception.DomainException;
 import com.jet.common.dto.GameMoveRequest;
 import com.jet.common.dto.GameStartRequest;
 import com.jet.game.entity.Game;
+import com.jet.game.event.GameEvent;
 import com.jet.game.repository.GameRepository;
 import com.jet.player.entity.Player;
 import com.jet.player.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,6 +20,8 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final PlayerRepository playerRepository;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
 
     public Game startGame(GameStartRequest request) {
         Optional<Player> startingPlayOp = playerRepository.findById(request.getStartingPlayer());
@@ -48,7 +52,14 @@ public class GameService {
         Game game = gameOpt.get();
         game.makeMove(request.getPlayerId());
         gameRepository.save(game);
+        publishDomainEvents(game);
         return game;
     }
+
+    private void publishDomainEvents(Game game) {
+        GameEvent event = new GameEvent(game.getCurrentNumber(), game.getPlayerTurn());
+        kafkaTemplate.send("game-events", event);
+    }
+
 
 }

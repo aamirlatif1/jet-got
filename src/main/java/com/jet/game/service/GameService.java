@@ -4,7 +4,7 @@ import com.jet.common.exception.DomainException;
 import com.jet.common.dto.GameMoveRequest;
 import com.jet.common.dto.GameStartRequest;
 import com.jet.game.entity.Game;
-import com.jet.game.event.GameEvent;
+import com.jet.common.event.GameEvent;
 import com.jet.game.repository.GameRepository;
 import com.jet.player.entity.Player;
 import com.jet.player.repository.PlayerRepository;

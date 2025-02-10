@@ -22,12 +22,8 @@ public class WebSocketEventListener {
         String username = (String) accessor.getSessionAttributes().get("username");
         if (username != null) {
             log.info("player disconnected: {}", username);
-            var gameMessage = GameMessage.builder()
-                    .sender(username)
-                    .type(MessageType.LEAVE)
-                    .build();
-
-            messageTemplate.convertAndSend("/topic/public", gameMessage);
+            var gameMessage = new GameMessage(username, 0, MessageType.LEAVE);
+            messageTemplate.convertAndSend("/topic/messages", gameMessage);
         }
     }
 

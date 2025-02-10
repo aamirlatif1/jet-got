@@ -21,7 +21,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: game-of-three-group
       properties:
-        spring.json.trusted.packages: "com.jet.game.event"
+        spring.json.trusted.packages: "com.jet.common.event"
 
 server:
   port: 8088

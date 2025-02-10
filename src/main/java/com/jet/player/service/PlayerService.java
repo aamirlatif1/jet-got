@@ -17,8 +17,8 @@ public class PlayerService {
 
     public Player savePlayer(PlayerRequest request) {
         Player player = new Player();
-        player.setId(request.getUsername());
-        player.setFullName(request.getFullName());
+        player.setId(request.username());
+        player.setFullName(request.fullName());
         player.setStatus(Status.ONLINE);
         return repository.save(player);
     }

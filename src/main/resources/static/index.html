@@ -8,40 +8,49 @@
 </head>
 <body>
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable Javascript and reload this page!</h2></noscript>
-
-<div>
-    <div>
-        <h2>Game of three</h2>
-        <div class="row">
-            <form id="form">
-                <div class="row">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" type="submit">Connect</button>
-                    <button id="disconnect" type="submit" disabled="disabled">Disconnect</button>
-                </div>
-            </form>
-        </div>
-        <div class="row">
-            <form>
+<div class="header">
+    <div class="center">
+        <h1>Game of Three</h1>
+    </div>
+</div>
+<div class="username">
+    <div class="row">
+        <h3>Player Login</h3>
+        <form id="form">
+            <div class="row">
+                <label class="row" for="username">Username:</label>
+                <input type="text" id="username" placeholder="Your username here..."/>
+                <button id="connect" type="submit" disabled="disabled">Connect</button>
+                <button id="disconnect" type="submit" disabled="disabled">Disconnect</button>
+            </div>
+        </form>
+        <div id="online"></div>
+        <div  class="row" id="sendmessage">
+            <form id="formsendmessage">
                 <div>
-                    <label class="row" for="name">What is your name?</label>
-                    <input type="text" id="name" placeholder="Your name here...">
+                    <label id="messagelabel" class="row" for="send">Game Number</label>
+                    <input type="text" id="inputsendmessage" placeholder="Enter number here...">
                     <button id="send" type="submit">Send</button>
                 </div>
             </form>
         </div>
     </div>
-    <div>
-        <div id="conversation">
-            <table>
-                <thead>
-                <tr>
-                    <th>Messages:</th>
-                </tr>
-                </thead>
-                <tbody id="greetings"></tbody>
-            </table>
-        </div>
+</div>
+<div class="members" id="memberslist">
+    <p>Players List:</p>
+    <ul id="playerslist"></ul>
+</div>
+<div class="messages" id="messagelist">
+    <p>Game Messages:</p>
+    <div id="gameDisplay">
+        <table>
+            <thead>
+            <tr>
+                <th>Moves:</th>
+            </tr>
+            </thead>
+            <tbody id="messagesList"></tbody>
+        </table>
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

@@ -23,6 +23,10 @@ class Message {
         this.action = action;
     }
 }
+let turn = null;
+let buttonMOne = null;
+let buttonOne = null;
+let buttonZero = null;
 let player = null;
 let stompClient = null;
 let userName = null;
@@ -37,13 +41,13 @@ let formInput = null;
 let sendMessage = null;
 let send = null;
 let formSendMessage = null;
-let inputSendMessage = null;
 let messageList = null;
 let membersList = null;
 let messageLabel = null;
 let membersListSelected = null;
 let selectedMember = null;
 let game = null;
+let autoPlay = true;
 
 document.addEventListener("DOMContentLoaded", function() {
     userName = document.getElementById("username");
@@ -58,10 +62,26 @@ document.addEventListener("DOMContentLoaded", function() {
     sendMessage = document.getElementById("sendmessage");
     send = document.getElementById("send");
     formSendMessage = document.getElementById("formsendmessage");
-    inputSendMessage = document.getElementById("inputsendmessage");
     messageList = document.getElementById("messagelist");
     membersList = document.getElementById("memberslist")
     messageLabel = document.getElementById("messagelabel");
+    turn = document.getElementById("turn");
+    buttonMOne = document.getElementById("mone");
+    buttonOne = document.getElementById("one");
+    buttonZero = document.getElementById("zero");
+
+    buttonOne.addEventListener("click", (e) => {
+        sendMoveMessages();
+        e.preventDefault();
+    });
+    buttonMOne.addEventListener("click", (e) => {
+        sendMoveMessages();
+        e.preventDefault();
+    });
+    buttonZero.addEventListener("click", (e) => {
+        sendMoveMessages();
+        e.preventDefault();
+    });
 
     buttonConnect.addEventListener("click", (e) => {
         connect();
@@ -74,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     send.addEventListener("click", (e) => {
-        sendGameMessages(selectedMember);
+        startGame();
         e.preventDefault();
     });
 
@@ -121,9 +141,17 @@ function disconnect() {
     console.log('Disconnected');
 }
 
-function sendGameMessages(receiverId) {
-    console.log('Send game message');
-    let message = new Message(null, player.username, membersListSelected.textContent, inputSendMessage.value, 'NEW')
+function startGame() {
+    let message = new Message(null, player.username, membersListSelected.textContent, randomNumber(60, 100), 'NEW')
+    sendGameMessage(message)
+}
+
+function sendMoveMessages() {
+    let message = new Message(game.id, player.username, null,  null, 'MOVE')
+    sendGameMessage(message);
+}
+
+function sendGameMessage(message) {
     stompClient.send(`/app/gamemessage`,
         {},
         JSON.stringify(message)
@@ -189,34 +217,57 @@ function showMessagesList(message) {
 function showGameMovies(message) {
     console.log(message)
     game = message;
-    // messagesList.innerHTML += "<tr><td><div class='private'><h3>" + message. + "</h3> " + message.action + " " +   " - " + message.comment + "</div></td></tr>";
-    // updateScroll(messageList);
+    buttonOne.disabled = true;
+    buttonZero.disabled = true;
+    buttonMOne.disabled = true;
+    if (game.finished) {
+        turn.innerHTML = "Game Over! "+game.winner+" has won.";
+    }else {
+        if(game.playerTurn === player.username){
+            turn.innerHTML = "Your Turn";
+            if(game.currentNumber % 3 === 0){
+                buttonZero.disabled = false;
+            } else if (game.currentNumber % 3 === 1){
+                buttonMOne.disabled = false;
+            } else {
+                buttonOne.disabled = false;
+            }
+        } else {
+            turn.innerHTML = game.playerTurn + "has Turn";
+        }
+    }
+    messagesList.innerHTML = "";
+    game.moveHistory.forEach( move => {
+        messagesList.innerHTML += "<tr><td><div class='private'><h3>" + move.playerId + "</h3> " + move.previousNumber + " " +   " - " + move.addedValue + " --> "+move.newNumber+ "</div></td></tr>";
+    });
+    updateScroll(messageList);
 }
 
 function showUsers(users) {
     console.log(users);
-    playersList.innerHTML = "<li class='red' id='memberslistitem0'>All members</li>";
-    messageLabel.innerHtml = "Send a public message:";
+    playersList.innerHTML = "";
     users.forEach( connectedUser => {
         playersList.innerHTML += "<li class='black' id='memberslistitem" + connectedUser.id + "' >" + connectedUser.id + "</li>";
     });
     updateScroll(membersList);
-    membersListSelected = document.getElementById('memberslistitem0');
+    membersListSelected = document.getElementById('memberslistitem'+users[0].id);
+
     playersList.addEventListener("click", (e) => {
         membersListSelected.className = 'black';
         membersListSelected  = document.getElementById(e.target.id);
-        if(membersListSelected.id === 'memberslistitem0') {
-            messageLabel.innerHTML = "Send a public message:";
-        } else {
-            messageLabel.innerHTML = "Send a private message to: " + membersListSelected.textContent;
-        }
+
+        messageLabel.innerHTML = "Start Game against: " + membersListSelected.textContent;
+
         membersListSelected.className = 'red';
         selectedMember = membersListSelected.id.charAt(membersListSelected.id.length - 1);
     });
-
 }
 
 function updateScroll(element) {
     element.scrollTop = element.scrollHeight;
+}
+
+function randomNumber(start, to) {
+    return Math.floor(start+ Math.random() * (to-start));
 }
 

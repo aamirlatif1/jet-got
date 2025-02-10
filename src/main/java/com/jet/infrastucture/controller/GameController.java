@@ -1,5 +1,6 @@
 package com.jet.infrastucture.controller;
 
+import com.jet.common.dto.GameAction;
 import com.jet.common.dto.GameMoveRequest;
 import com.jet.common.dto.GameStartRequest;
 import com.jet.game.entity.Game;
@@ -20,13 +21,21 @@ public class GameController {
 
     @MessageMapping("/gamemessage")
     public void gameMove(GameMoveRequest request) {
-        GameStartRequest gameStartRequest = new GameStartRequest();
-        gameStartRequest.setStartingPlayer(request.getPlayerId());
-        gameStartRequest.setAgainstPlayer(request.getAgainstPlayerId());
-        gameStartRequest.setStartingNumber(request.getNumber());
-        Game game = gameService.startGame(gameStartRequest);
-        simpMessagingTemplate.convertAndSendToUser(request.getPlayerId(), "/topic/gamemessages", game);
-        simpMessagingTemplate.convertAndSendToUser(request.getAgainstPlayerId(), "/topic/gamemessages", game);
+        Game game = null;
+        if(request.getAction().equals(GameAction.NEW)) {
+            GameStartRequest gameStartRequest = new GameStartRequest();
+            gameStartRequest.setStartingPlayer(request.getPlayerId());
+            gameStartRequest.setAgainstPlayer(request.getAgainstPlayerId());
+            gameStartRequest.setStartingNumber(request.getNumber());
+            game = gameService.startGame(gameStartRequest);
+        } else {
+            GameMoveRequest moveRequest = new GameMoveRequest();
+            moveRequest.setGameId(request.getGameId());
+            moveRequest.setPlayerId(request.getPlayerId());
+            game = gameService.makeMove(moveRequest);
+        }
+        simpMessagingTemplate.convertAndSendToUser(game.getPlayers().get(0), "/topic/gamemessages", game);
+        simpMessagingTemplate.convertAndSendToUser(game.getPlayers().get(1), "/topic/gamemessages", game);
 
     }
 

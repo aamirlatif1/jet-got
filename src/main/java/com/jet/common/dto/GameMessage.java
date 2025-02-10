@@ -1,7 +1,7 @@
 package com.jet.common.dto;
 
 public record GameMessage(
-        String sender,
+        String username,
         int number,
-        MessageType type
+        PlayerAction action
 ) {}

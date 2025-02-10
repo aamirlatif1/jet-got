@@ -9,21 +9,21 @@ class Player {
 }
 
 class Message {
-    user;
-    receiverId;
-    comment;
+    gameId;
+    playerId;
+    againstPlayerId;
+    number;
     action;
-    timestamp;
 
-    constructor(user, receiverId, comment, action, timestamp) {
-        this.user = user;
-        this.receiverId = receiverId
-        this.comment = comment;
+    constructor(gameId, playerId, againstPlayerId, number, action) {
+        this.gameId = gameId;
+        this.playerId = playerId
+        this.againstPlayerId = againstPlayerId;
+        this.number = number;
         this.action = action;
-        this.timestamp = timestamp;
     }
 }
-
+let player = null;
 let stompClient = null;
 let userName = null;
 let playersList = null;
@@ -41,6 +41,9 @@ let inputSendMessage = null;
 let messageList = null;
 let membersList = null;
 let messageLabel = null;
+let membersListSelected = null;
+let selectedMember = null;
+let game = null;
 
 document.addEventListener("DOMContentLoaded", function() {
     userName = document.getElementById("username");
@@ -120,7 +123,7 @@ function disconnect() {
 
 function sendGameMessages(receiverId) {
     console.log('Send game message');
-    let message = new Message(user, receiverId, inputSendMessage.value, 'NEW_PRIVATE_MESSAGE', null)
+    let message = new Message(null, player.username, membersListSelected.textContent, inputSendMessage.value, 'NEW')
     stompClient.send(`/app/gamemessage`,
         {},
         JSON.stringify(message)
@@ -150,15 +153,15 @@ function onError(error) {
 
 function onConnected() {
     setConnected(true);
-    let player = new Player(userName.value);
+    player = new Player(userName.value);
     online.innerHTML = "<p>" + player.username + " you are online!</p>";
 
-    stompClient.subscribe('/user/' + player.username + '/topic/players', (playersList) => {
+    stompClient.subscribe('/player/' + player.username + '/topic/players', (playersList) => {
         showUsers(JSON.parse(playersList.body));
     });
 
-    stompClient.subscribe('/user/' + player.username + '/topic/gamemessages', (usersList) => {
-        showGameMovies(JSON.parse(usersList.body));
+    stompClient.subscribe('/player/' + player.username + '/topic/gamemessages', (gameMessage) => {
+        showGameMovies(JSON.parse(gameMessage.body));
     });
 
     stompClient.subscribe('/topic/messages', (message) => {
@@ -178,26 +181,28 @@ function showMessagesList(message) {
     //     messagesList.innerHTML += "<tr><td><div><h3>" + message.user.username + "</h3> " + message.action + " " +  date.toLocaleString("nl-BE") +  " - " + message.comment + "</div></td></tr>";
     // };
     if(message.action == 'JOIN' || message.action == 'LEFT') {
-        messagesList.innerHTML += "<tr><td><div>" + message.user.username + " " + message.action + " " +  date.toLocaleString("nl-BE") + "</div></td></tr>";
+        messagesList.innerHTML += "<tr><td><div>" + message.username + " " + message.action + " " +  date.toLocaleString("nl-BE") + "</div></td></tr>";
     }
     updateScroll(messageList);
 }
 
 function showGameMovies(message) {
-    const date = new Date(message.timestamp);
-    messagesList.innerHTML += "<tr><td><div class='private'><h3>" + message.user.username + "</h3> " + message.action + " " +  date.toLocaleString("nl-BE") + " - " + message.comment + "</div></td></tr>";
-    updateScroll(messageList);
+    console.log(message)
+    game = message;
+    // messagesList.innerHTML += "<tr><td><div class='private'><h3>" + message. + "</h3> " + message.action + " " +   " - " + message.comment + "</div></td></tr>";
+    // updateScroll(messageList);
 }
 
 function showUsers(users) {
-    usersList.innerHTML = "<li class='red' id='memberslistitem0'>All members</li>";
+    console.log(users);
+    playersList.innerHTML = "<li class='red' id='memberslistitem0'>All members</li>";
     messageLabel.innerHtml = "Send a public message:";
     users.forEach( connectedUser => {
-        usersList.innerHTML += "<li class='black' id='memberslistitem" + connectedUser.serialId + "' >" + connectedUser.username + "</li>";
+        playersList.innerHTML += "<li class='black' id='memberslistitem" + connectedUser.id + "' >" + connectedUser.id + "</li>";
     });
     updateScroll(membersList);
-    let membersListSelected = document.getElementById('memberslistitem0');
-    usersList.addEventListener("click", (e) => {
+    membersListSelected = document.getElementById('memberslistitem0');
+    playersList.addEventListener("click", (e) => {
         membersListSelected.className = 'black';
         membersListSelected  = document.getElementById(e.target.id);
         if(membersListSelected.id === 'memberslistitem0') {
@@ -206,7 +211,7 @@ function showUsers(users) {
             messageLabel.innerHTML = "Send a private message to: " + membersListSelected.textContent;
         }
         membersListSelected.className = 'red';
-        let selectedMember = membersListSelected.id.charAt(membersListSelected.id.length - 1);
+        selectedMember = membersListSelected.id.charAt(membersListSelected.id.length - 1);
     });
 
 }

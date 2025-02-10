@@ -8,5 +8,7 @@ import lombok.Setter;
 public class GameMoveRequest {
     private String gameId;
     private String playerId;
-    private String number;
+    private String againstPlayerId;
+    private int number;
+    private GameAction action;
 }

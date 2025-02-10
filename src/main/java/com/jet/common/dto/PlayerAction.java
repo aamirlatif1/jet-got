@@ -1,6 +1,6 @@
 package com.jet.common.dto;
 
-public enum MessageType {
+public enum PlayerAction {
     MOVE,
     JOIN,
     LEAVE

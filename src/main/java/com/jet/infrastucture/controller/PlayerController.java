@@ -1,7 +1,7 @@
 package com.jet.infrastucture.controller;
 
 import com.jet.common.dto.GameMessage;
-import com.jet.common.dto.MessageType;
+import com.jet.common.dto.PlayerAction;
 import com.jet.common.dto.PlayerRequest;
 import com.jet.player.entity.Player;
 import com.jet.player.service.PlayerService;
@@ -27,7 +27,7 @@ public class PlayerController {
         Player newPlayer = playerService.savePlayer(request);
         headerAccessor.getSessionAttributes().put("user", newPlayer);
         sendMembersList();
-        var newMessage = new GameMessage(newPlayer.getId(), 0, MessageType.JOIN);
+        var newMessage = new GameMessage(newPlayer.getId(), 0, PlayerAction.JOIN);
         simpMessagingTemplate.convertAndSend("/topic/messages", newMessage);
     }
 
@@ -44,8 +44,10 @@ public class PlayerController {
 
     private void sendMembersList() {
         List<Player> memberList = playerService.getAllPlayer();
-        memberList.forEach(
-                sendUser -> simpMessagingTemplate.convertAndSendToUser(sendUser.getId(), "/topic/players", filterMemberListByUser(memberList, sendUser)));
+        for (Player player : memberList) {
+            simpMessagingTemplate.convertAndSendToUser(player.getId(), "/topic/players", filterMemberListByUser(memberList, player));
+        }
+
     }
 
     List<Player> filterMemberListByUser(List<Player> players, Player player) {

@@ -1,7 +1,7 @@
 package com.jet.infrastucture.websocket;
 
 import com.jet.common.dto.GameMessage;
-import com.jet.common.dto.MessageType;
+import com.jet.common.dto.PlayerAction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -22,7 +22,7 @@ public class WebSocketEventListener {
         String username = (String) accessor.getSessionAttributes().get("username");
         if (username != null) {
             log.info("player disconnected: {}", username);
-            var gameMessage = new GameMessage(username, 0, MessageType.LEAVE);
+            var gameMessage = new GameMessage(username, 0, PlayerAction.LEAVE);
             messageTemplate.convertAndSend("/topic/messages", gameMessage);
         }
     }

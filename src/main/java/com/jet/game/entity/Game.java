@@ -21,6 +21,7 @@ public class Game {
     private String id;
     private String playerTurn;
     private int currentNumber;
+    private int startNumber;
     private boolean finished;
     private String winner;
     private List<String> players;
@@ -32,6 +33,7 @@ public class Game {
         this.currentNumber = startNumber;
         this.moveHistory = new ArrayList<>();
         this.players = List.of(startingPlayer, againstPlayer);
+        this.startNumber = startNumber;
         this.finished = false;
     }
 

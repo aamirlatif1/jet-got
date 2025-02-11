@@ -224,7 +224,7 @@ function showGameMovies(message) {
         turn.innerHTML = "Game Over! "+game.winner+" has won.";
     }else {
         if(game.playerTurn === player.username){
-            turn.innerHTML = "Your Turn";
+            turn.innerHTML = "Your Turn, Current value : "+game.currentNumber;
             if(game.currentNumber % 3 === 0){
                 buttonZero.disabled = false;
             } else if (game.currentNumber % 3 === 1){
@@ -233,12 +233,19 @@ function showGameMovies(message) {
                 buttonOne.disabled = false;
             }
         } else {
-            turn.innerHTML = game.playerTurn + "has Turn";
+            turn.innerHTML = game.playerTurn + " has Turn, Current value : "+game.currentNumber;
         }
     }
     messagesList.innerHTML = "";
+    if (game.players[0] === player.username)
+        messagesList.innerHTML += "<tr><td>Player: <div class='private'><b>" + game.players[0] + "</b>  (" + game.startNumber + ") ---------- " + game.startNumber + " ------------> "+game.startNumber+ "</div></td></tr>";
+    else
+        messagesList.innerHTML += "<tr><td>Player: <div class='private'><b>" + game.players[0] + "</b> " +game.startNumber + " <---------- " + game.startNumber + " ------------  (" + game.startNumber + ")</div></td></tr>";
     game.moveHistory.forEach( move => {
-        messagesList.innerHTML += "<tr><td><div class='private'><h3>" + move.playerId + "</h3> " + move.previousNumber + " " +   " - " + move.addedValue + " --> "+move.newNumber+ "</div></td></tr>";
+        if (move.playerId === player.username)
+            messagesList.innerHTML += "<tr><td>Player: <div class='private'><b>" + move.playerId + "</b>  (" + move.addedValue + ") ---------- " + (move.previousNumber+move.addedValue) + " / 3 ------------> "+move.newNumber+ "</div></td></tr>";
+        else
+            messagesList.innerHTML += "<tr><td>Player: <div class='private'><b>" + move.playerId + "</b> " +move.newNumber + " <---------- " + (move.previousNumber+move.addedValue) + " / 3 ------------  (" + move.addedValue + ")</div></td></tr>";
     });
     updateScroll(messageList);
 }

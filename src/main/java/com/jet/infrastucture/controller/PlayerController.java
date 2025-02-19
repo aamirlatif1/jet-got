@@ -23,10 +23,10 @@ public class PlayerController {
 
 
     @MessageMapping("/player")
-    public void addPlayer(PlayerRequest request, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-        Player newPlayer = playerService.savePlayer(request);
-        headerAccessor.getSessionAttributes().put("user", newPlayer);
-        sendMembersList();
+    public void addPlayer(PlayerRequest request, SimpMessageHeaderAccessor headerAccessor)  {
+        Player newPlayer = playerService.connectPlayer(request);
+        headerAccessor.getSessionAttributes().put("username", newPlayer.getId());
+
         var newMessage = new GameMessage(newPlayer.getId(), 0, PlayerAction.JOIN);
         simpMessagingTemplate.convertAndSend("/topic/messages", newMessage);
     }
@@ -34,7 +34,7 @@ public class PlayerController {
     @PostMapping("/players")
     @ResponseStatus(HttpStatus.CREATED)
     public Player createPlayer(@RequestBody PlayerRequest request) {
-        return playerService.savePlayer(request);
+        return playerService.connectPlayer(request);
     }
 
     @GetMapping("/players")
@@ -42,17 +42,6 @@ public class PlayerController {
         return playerService.getAllPlayer();
     }
 
-    private void sendMembersList() {
-        List<Player> memberList = playerService.getAllPlayer();
-        for (Player player : memberList) {
-            simpMessagingTemplate.convertAndSendToUser(player.getId(), "/topic/players", filterMemberListByUser(memberList, player));
-        }
 
-    }
-
-    List<Player> filterMemberListByUser(List<Player> players, Player player) {
-        return players.stream().filter(filterUser -> !filterUser.getId().equals(player.getId()))
-                .toList();
-    }
 
 }

@@ -1,4 +1,4 @@
-package com.jet.infrastucture.kafka;
+package com.jet.infrastucture.kafka.listener;
 
 import com.jet.common.event.GameEvent;
 import com.jet.common.event.PlayerChangedEvent;
@@ -26,9 +26,9 @@ public class GameEventListener {
         messagingTemplate.convertAndSend("/topic/game-status",  event);
     }
 
-    @KafkaListener(topics = "player-events", groupId = "game-of-three-group")
+    @KafkaListener(topics = "${player.player-changed-topic-name}", groupId = "game-of-three-group")
     public void handlePlayerConnected(PlayerChangedEvent event) {
-        log.info("Player changed: " + event.playerId());
+        log.info("Player changed: " + event.getPlayer().getId());
         sendMembersList();
     }
 

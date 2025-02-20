@@ -2,11 +2,11 @@ package com.jet.player.service;
 
 import com.jet.common.dto.PlayerRequest;
 import com.jet.common.event.PlayerChangedEvent;
+import com.jet.infrastucture.kafka.publisher.PlayerChangeMessagePublisher;
 import com.jet.player.entity.Player;
 import com.jet.player.valueobject.Status;
 import com.jet.player.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 public class PlayerService {
 
     private final PlayerRepository repository;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final PlayerChangeMessagePublisher messagePublisher;
 
     public Player connectPlayer(PlayerRequest request) {
         Player player = new Player();
@@ -25,14 +25,10 @@ public class PlayerService {
         player.setStatus(Status.ONLINE);
         Player savedPlayer = repository.save(player);
 
-        sendUserEvent(savedPlayer);
+        PlayerChangedEvent event = new PlayerChangedEvent(savedPlayer, messagePublisher);
+        event.fire();
 
         return savedPlayer;
-    }
-
-    private void sendUserEvent(Player savedPlayer) {
-        PlayerChangedEvent event = new PlayerChangedEvent(savedPlayer.getId());
-        kafkaTemplate.send("player-events", event);
     }
 
     public void disconnectPlayer(String username) {
@@ -40,7 +36,9 @@ public class PlayerService {
         if (storedPlayer != null) {
             storedPlayer.setStatus(Status.OFFLINE);
             repository.save(storedPlayer);
-            sendUserEvent(storedPlayer);
+            PlayerChangedEvent event = new PlayerChangedEvent(storedPlayer, messagePublisher);
+            event.fire();
+
         }
     }
 

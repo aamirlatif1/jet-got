@@ -23,5 +23,9 @@ spring:
       properties:
         spring.json.trusted.packages: "com.jet.common.event"
 
+player:
+  player-changed-topic-name: player-events
+
+
 server:
   port: 8088

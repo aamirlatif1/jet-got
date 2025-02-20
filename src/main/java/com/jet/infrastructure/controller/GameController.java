@@ -1,4 +1,4 @@
-package com.jet.infrastucture.controller;
+package com.jet.infrastructure.controller;
 
 import com.jet.common.dto.GameAction;
 import com.jet.common.dto.GameMoveRequest;

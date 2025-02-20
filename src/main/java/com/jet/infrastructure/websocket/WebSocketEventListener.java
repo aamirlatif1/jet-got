@@ -1,4 +1,4 @@
-package com.jet.infrastucture.websocket;
+package com.jet.infrastructure.websocket;
 
 import com.jet.common.dto.GameMessage;
 import com.jet.common.dto.PlayerAction;

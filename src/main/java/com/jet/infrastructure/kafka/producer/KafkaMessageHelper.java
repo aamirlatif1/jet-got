@@ -1,4 +1,4 @@
-package com.jet.infrastucture.kafka.producer;
+package com.jet.infrastructure.kafka.producer;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RecordMetadata;

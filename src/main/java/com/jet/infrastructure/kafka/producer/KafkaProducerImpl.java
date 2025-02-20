@@ -1,4 +1,4 @@
-package com.jet.infrastucture.kafka.producer;
+package com.jet.infrastructure.kafka.producer;
 
 import com.jet.common.exception.KafkaProducerException;
 import jakarta.annotation.PreDestroy;

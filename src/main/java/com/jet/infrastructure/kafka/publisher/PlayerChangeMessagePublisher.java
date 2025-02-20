@@ -1,13 +1,12 @@
-package com.jet.infrastucture.kafka.publisher;
+package com.jet.infrastructure.kafka.publisher;
 
 import com.jet.common.event.PlayerChangedEvent;
 import com.jet.common.event.publisher.DomainEventPublisher;
-import com.jet.infrastucture.kafka.producer.KafkaMessageHelper;
-import com.jet.infrastucture.kafka.producer.KafkaProducer;
-import com.jet.player.entity.Player;
+import com.jet.infrastructure.kafka.model.PlayerChangeModel;
+import com.jet.infrastructure.kafka.producer.KafkaMessageHelper;
+import com.jet.infrastructure.kafka.producer.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -15,12 +14,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PlayerChangeMessagePublisher implements DomainEventPublisher<PlayerChangedEvent> {
 
-    private final KafkaProducer<String, PlayerChangedEvent> kafkaTemplate;
+    private final KafkaProducer<String, PlayerChangeModel> kafkaTemplate;
     private final KafkaMessageHelper orderKafkaMessageHelper;
 
     @Override
     public void publish(PlayerChangedEvent domainEvent) {
         var playerId = domainEvent.getPlayer().getId();
-        kafkaTemplate.send("player-events", playerId, domainEvent, orderKafkaMessageHelper.callback());
+        kafkaTemplate.send("player-events", playerId, new PlayerChangeModel(domainEvent.getPlayer().getId()), orderKafkaMessageHelper.callback());
     }
 }

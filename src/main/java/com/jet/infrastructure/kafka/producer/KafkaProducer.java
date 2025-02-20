@@ -1,4 +1,4 @@
-package com.jet.infrastucture.kafka.producer;
+package com.jet.infrastructure.kafka.producer;
 
 import org.springframework.kafka.support.SendResult;
 import java.io.Serializable;

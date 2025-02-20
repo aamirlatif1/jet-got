@@ -1,4 +1,4 @@
-package com.jet.infrastucture.config;
+package com.jet.infrastructure.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;

@@ -2,7 +2,7 @@ package com.jet.player.service;
 
 import com.jet.common.dto.PlayerRequest;
 import com.jet.common.event.PlayerChangedEvent;
-import com.jet.infrastucture.kafka.publisher.PlayerChangeMessagePublisher;
+import com.jet.infrastructure.kafka.publisher.PlayerChangeMessagePublisher;
 import com.jet.player.entity.Player;
 import com.jet.player.valueobject.Status;
 import com.jet.player.repository.PlayerRepository;

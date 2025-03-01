@@ -23,13 +23,13 @@ public class PlayerChangeKafkaListener implements KafkaConsumer<PlayerChangeMode
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
-    @KafkaListener(id = "game-of-three-group",
+    @KafkaListener(groupId = "game-of-three-group",
             topics = "${player.player-changed-topic-name}")
     public void receive(@Payload List<PlayerChangeModel> messages,
                         @Header(KafkaHeaders.RECEIVED_KEY) List<String> keys,
                         @Header(KafkaHeaders.RECEIVED_PARTITION) List<Integer> partitions,
                         @Header(KafkaHeaders.OFFSET) List<Long> offsets) {
-        log.info("{} number of payment requests received with keys:{}, partitions:{} and offsets: {}",
+        log.info("{} number of player change requests received with keys:{}, partitions:{} and offsets: {}",
                 messages.size(),
                 keys.toString(),
                 partitions.toString(),

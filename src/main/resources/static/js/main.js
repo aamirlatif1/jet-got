@@ -236,16 +236,20 @@ function showGameMovies(message) {
             turn.innerHTML = game.playerTurn + " has Turn, Current value : "+game.currentNumber;
         }
     }
-    messagesList.innerHTML = "";
-    if (game.players[0] === player.username)
-        messagesList.innerHTML += "<tr><td>Player: <div class='private'><b>" + game.players[0] + "</b>  (" + game.startNumber + ") ---------- " + game.startNumber + " ------------> "+game.startNumber+ "</div></td></tr>";
+    if(game.players[0] === player.username)
+        messagesList.innerHTML = "<tr><th>"+game.players[0]+"</th><th></th><th>"+game.players[1]+"</th></tr>";
     else
-        messagesList.innerHTML += "<tr><td>Player: <div class='private'><b>" + game.players[0] + "</b> " +game.startNumber + " <---------- " + game.startNumber + " ------------  (" + game.startNumber + ")</div></td></tr>";
+        messagesList.innerHTML = "<tr><th>"+game.players[1]+"</th><th></th><th>"+game.players[0]+"</th></tr>";
+
+    if (game.players[0] === player.username)
+        messagesList.innerHTML += "<tr><td><div class='private'>(" + game.startNumber + ") </td> <td> ---------- " + game.startNumber + " ------------> </td><td>"+game.startNumber+ "</div></td></tr>";
+    else
+        messagesList.innerHTML += "<tr><td><div class='private'>" +game.startNumber + " </td><td> <---------- " + game.startNumber + " ------------  </td><td> (" + game.startNumber + ")</div></td></td></tr>";
     game.moveHistory.forEach( move => {
         if (move.playerId === player.username)
-            messagesList.innerHTML += "<tr><td>Player: <div class='private'><b>" + move.playerId + "</b>  (" + move.addedValue + ") ---------- " + (move.previousNumber+move.addedValue) + " / 3 ------------> "+move.newNumber+ "</div></td></tr>";
+            messagesList.innerHTML += "<tr><td><div class='private'>(" + move.addedValue + ") </td><td> ---------- " + (move.previousNumber+move.addedValue) + " / 3 ------------>  </td> <td>"+move.newNumber+ "</div></td></tr>";
         else
-            messagesList.innerHTML += "<tr><td>Player: <div class='private'><b>" + move.playerId + "</b> " +move.newNumber + " <---------- " + (move.previousNumber+move.addedValue) + " / 3 ------------  (" + move.addedValue + ")</div></td></tr>";
+            messagesList.innerHTML += "<tr><td><div class='private'>" + move.newNumber + " </td><td> <---------- " + (move.previousNumber+move.addedValue) + " / 3 ------------ </td> <td> (" + move.addedValue + ")</div></td></tr>";
     });
     updateScroll(messageList);
 }

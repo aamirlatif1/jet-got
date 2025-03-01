@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component;
 public class PlayerChangeMessagePublisher implements DomainEventPublisher<PlayerChangedEvent> {
 
     private final KafkaProducer<String, PlayerChangeModel> kafkaTemplate;
-    private final KafkaMessageHelper orderKafkaMessageHelper;
+    private final KafkaMessageHelper kafkaMessageHelper;
 
     @Override
     public void publish(PlayerChangedEvent domainEvent) {
         var playerId = domainEvent.getPlayer().getId();
-        kafkaTemplate.send("player-events", playerId, new PlayerChangeModel(domainEvent.getPlayer().getId()), orderKafkaMessageHelper.callback());
+        kafkaTemplate.send("player-events", playerId, new PlayerChangeModel(domainEvent.getPlayer().getId()), kafkaMessageHelper.callback());
     }
 }

@@ -16,4 +16,5 @@ public class Player {
     private String id;
     private String fullName;
     private Status status;
+    private boolean autoPlay;
 }

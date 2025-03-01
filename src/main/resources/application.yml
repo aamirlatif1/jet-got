@@ -21,11 +21,13 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: game-of-three-group
       properties:
-        spring.json.trusted.packages: "com.jet.infrastructure.kafka.model"
+        spring.json.trusted.packages: "com.jet.infrastructure.kafka.model,com.jet.common.event"
 
 player:
   player-changed-topic-name: player-events
 
+game:
+  game-changed-topic-name: game-events
 
 server:
   port: 8088

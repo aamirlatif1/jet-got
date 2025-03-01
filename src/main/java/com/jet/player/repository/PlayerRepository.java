@@ -13,5 +13,4 @@ public interface PlayerRepository extends MongoRepository<Player, String> {
     List<Player> findAllByStatus(Status status);
     Optional<Player> findById(String id);
 
-
 }
